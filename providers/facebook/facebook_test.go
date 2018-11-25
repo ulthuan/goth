@@ -55,11 +55,5 @@ func Test_SessionFromJSON(t *testing.T) {
 }
 
 func facebookProvider() *facebook.Provider {
-	scopes := []string{"picture.type(large)", "email"}
-	return facebook.New(
-		os.Getenv("FACEBOOK_KEY"),
-		os.Getenv("FACEBOOK_SECRET"),
-		"/foo",
-		scopes...,
-	)
+	return facebook.New(os.Getenv("FACEBOOK_KEY"), os.Getenv("FACEBOOK_SECRET"), "/foo", "email")
 }
