@@ -29,27 +29,31 @@ var (
 	AuthURL    = "https://app.gitkraken.com/oauth/authorize"
 	TokenURL   = "https://api.gitkraken.com/oauth/access_token"
 	ProfileURL = "https://gloapi.gitkraken.com/v1/glo/user"
+	EmailURL   = ""
 )
 
 // New creates a new Github provider, and sets up important connection details.
 // You should always call `github.New` to get a new Provider. Never try to create
 // one manually.
+
 func New(clientKey, secret, callbackURL string, scopes ...string) *Provider {
-	return NewCustomisedURL(clientKey, secret, callbackURL, AuthURL, TokenURL, ProfileURL, scopes...)
+	return NewCustomisedURL(clientKey, secret, callbackURL, AuthURL, TokenURL, ProfileURL, EmailURL, scopes...)
 }
 
 // NewCustomisedURL is similar to New(...) but can be used to set custom URLs to connect to
-func NewCustomisedURL(clientKey, secret, callbackURL, authURL, tokenURL, profileURL, scopes ...string) *Provider {
+func NewCustomisedURL(clientKey, secret, callbackURL, authURL, tokenURL, profileURL, emailURL string, scopes ...string) *Provider {
 	p := &Provider{
 		ClientKey:    clientKey,
 		Secret:       secret,
 		CallbackURL:  callbackURL,
-		providerName: "glo",
+		providerName: "github",
 		profileURL:   profileURL,
+		emailURL:     emailURL,
 	}
 	p.config = newConfig(p, authURL, tokenURL, scopes)
 	return p
 }
+
 
 // Provider is the implementation of `goth.Provider` for accessing Github.
 type Provider struct {
