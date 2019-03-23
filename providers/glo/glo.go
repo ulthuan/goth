@@ -35,7 +35,6 @@ var (
 // New creates a new Github provider, and sets up important connection details.
 // You should always call `github.New` to get a new Provider. Never try to create
 // one manually.
-
 func New(clientKey, secret, callbackURL string, scopes ...string) *Provider {
 	return NewCustomisedURL(clientKey, secret, callbackURL, AuthURL, TokenURL, ProfileURL, EmailURL, scopes...)
 }
@@ -136,7 +135,7 @@ func (p *Provider) FetchUser(session goth.Session) (goth.User, error) {
 
 func userFromReader(reader io.Reader, user *goth.User) error {
 	u := struct {
-		ID       int    `json:"id"`
+		ID       string `json:"id"`
 		Email    string `json:"email"`
 		Bio      string `json:"bio"`
 		Name     string `json:"name"`
@@ -155,7 +154,7 @@ func userFromReader(reader io.Reader, user *goth.User) error {
 	user.Email = u.Email
 	user.Description = u.Bio
 	user.AvatarURL = u.Picture
-	user.UserID = strconv.Itoa(u.ID)
+	user.UserID = u.ID
 	user.Location = u.Location
 
 	return err
