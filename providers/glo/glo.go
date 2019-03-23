@@ -11,7 +11,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"strconv"
 
 	"github.com/markbates/goth"
 	"golang.org/x/oauth2"
@@ -52,7 +51,6 @@ func NewCustomisedURL(clientKey, secret, callbackURL, authURL, tokenURL, profile
 	p.config = newConfig(p, authURL, tokenURL, scopes)
 	return p
 }
-
 
 // Provider is the implementation of `goth.Provider` for accessing Github.
 type Provider struct {
