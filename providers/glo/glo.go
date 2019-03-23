@@ -46,7 +46,7 @@ func NewCustomisedURL(clientKey, secret, callbackURL, authURL, tokenURL, profile
 		ClientKey:    clientKey,
 		Secret:       secret,
 		CallbackURL:  callbackURL,
-		providerName: "github",
+		providerName: "glo",
 		profileURL:   profileURL,
 		emailURL:     emailURL,
 	}
