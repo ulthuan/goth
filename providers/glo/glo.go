@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/Automattic/go-gravatar"
 	"github.com/markbates/goth"
 	"golang.org/x/oauth2"
 )
@@ -103,7 +104,7 @@ func (p *Provider) FetchUser(session goth.Session) (goth.User, error) {
 		return user, fmt.Errorf("%s cannot get user information without accessToken", p.providerName)
 	}
 
-	response, err := p.Client().Get(p.profileURL + "?access_token=" + url.QueryEscape(sess.AccessToken))
+	response, err := p.Client().Get(p.profileURL + "?fields=email&fields=name&fields=username&access_token=" + url.QueryEscape(sess.AccessToken))
 	if err != nil {
 		return user, err
 	}
@@ -133,13 +134,10 @@ func (p *Provider) FetchUser(session goth.Session) (goth.User, error) {
 
 func userFromReader(reader io.Reader, user *goth.User) error {
 	u := struct {
-		ID       string `json:"id"`
-		Email    string `json:"email"`
-		Bio      string `json:"bio"`
-		Name     string `json:"name"`
-		Login    string `json:"login"`
-		Picture  string `json:"avatar_url"`
-		Location string `json:"location"`
+		ID    string `json:"id"`
+		Email string `json:"email"`
+		Name  string `json:"name"`
+		Login string `json:"username"`
 	}{}
 
 	err := json.NewDecoder(reader).Decode(&u)
@@ -150,10 +148,8 @@ func userFromReader(reader io.Reader, user *goth.User) error {
 	user.Name = u.Name
 	user.NickName = u.Login
 	user.Email = u.Email
-	user.Description = u.Bio
-	user.AvatarURL = u.Picture
+	user.AvatarURL = gravatar.NewGravatarFromEmail(u.Email).GetURL()
 	user.UserID = u.ID
-	user.Location = u.Location
 
 	return err
 }
